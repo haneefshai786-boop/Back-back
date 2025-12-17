@@ -1,9 +1,25 @@
-import express from "express";
-import { adminLogin } from "../controllers/adminController.js";
+// controllers/adminController.js
+import Admin from "../models/Admin.js";
+import jwt from "jsonwebtoken";
 
-const router = express.Router();
+const generateToken = (id) => {
+  return jwt.sign({ id, role: "admin" }, process.env.JWT_SECRET, { expiresIn: "30d" });
+};
 
-// POST /api/admin/login
-router.post("/login", adminLogin);
+// Login admin
+export const loginAdmin = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const admin = await Admin.findOne({ username });
+    if (!admin || !(await admin.matchPassword(password))) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
-export default router;
+    res.json({
+      token: generateToken(admin._id),
+      username: admin.username
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
