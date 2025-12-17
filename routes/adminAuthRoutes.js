@@ -1,8 +1,12 @@
 import express from "express";
-import { loginAdmin } from "../controllers/adminController.js"; // use loginAdmin
+import { loginAdmin, registerAdmin } from "../controllers/adminAuthController.js";
 
 const router = express.Router();
 
-// POST /api/admin/login
-router.post("/login", loginAdmin); // fixed
+// POST /api/admin/auth/login
+router.post("/login", loginAdmin);
+
+// POST /api/admin/auth/register (optional)
+router.post("/register", registerAdmin);
+
 export default router;
