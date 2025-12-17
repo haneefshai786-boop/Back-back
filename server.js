@@ -12,6 +12,7 @@ import subCategoryRoutes from "./routes/subCategoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import adminAuthRoutes from "./routes/adminAuthRoutes.js";
+import seedRoutes from "./routes/seedRoutes.js";
 
 // Middleware
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
@@ -32,6 +33,7 @@ app.use("/api/subcategories", subCategoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/admin/auth", adminAuthRoutes);
+app.use("/api", seedRoutes);
 
 // Error handling
 app.use(notFound);
