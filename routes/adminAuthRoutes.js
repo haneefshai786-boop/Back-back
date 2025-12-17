@@ -1,25 +1,8 @@
-// controllers/adminController.js
-import Admin from "../models/Admin.js";
-import jwt from "jsonwebtoken";
+import express from "express";
+import { loginAdmin } from "../controllers/adminController.js"; // use loginAdmin
 
-const generateToken = (id) => {
-  return jwt.sign({ id, role: "admin" }, process.env.JWT_SECRET, { expiresIn: "30d" });
-};
+const router = express.Router();
 
-// Login admin
-export const loginAdmin = async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    const admin = await Admin.findOne({ username });
-    if (!admin || !(await admin.matchPassword(password))) {
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
-
-    res.json({
-      token: generateToken(admin._id),
-      username: admin.username
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+// POST /api/admin/login
+router.post("/login", loginAdmin); // fixed
+export default router;
