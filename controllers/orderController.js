@@ -1,40 +1,42 @@
 import Order from "../models/Order.js";
 
-// ✅ CREATE ORDER
+// User creates order
 export const createOrder = async (req, res) => {
-  try {
-    const { products, paymentMethod = "COD" } = req.body;
+  const { products, paymentMethod } = req.body;
+  if (!products || !products.length)
+    return res.status(400).json({ message: "Cart is empty" });
 
-    if (!products || products.length === 0) {
-      return res.status(400).json({ message: "Cart is empty" });
-    }
+  const totalPrice = products.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
-    const totalPrice = products.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
+  const order = await Order.create({
+    user: req.user._id,
+    products,
+    totalPrice,
+    paymentMethod,
+  });
 
-    const order = await Order.create({
-      user: req.user._id,
-      products,
-      totalPrice,
-      paymentMethod,
-    });
-
-    res.status(201).json(order);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+  res.status(201).json(order);
 };
 
-// ✅ GET LOGGED-IN USER ORDERS
+// Get user orders
 export const getUserOrders = async (req, res) => {
-  try {
-    const orders = await Order.find({ user: req.user._id })
-      .populate("products.product");
+  const orders = await Order.find({ user: req.user._id });
+  res.json(orders);
+};
 
-    res.json(orders);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+// Admin gets all orders
+export const getAllOrders = async (req, res) => {
+  const orders = await Order.find().populate("user");
+  res.json(orders);
+};
+
+// Admin updates order status
+export const updateOrderStatus = async (req, res) => {
+  const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  res.json(order);
 };
