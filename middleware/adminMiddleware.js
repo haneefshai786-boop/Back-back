@@ -21,9 +21,9 @@ export const protectAdmin = async (req, res, next) => {
 
       next();
     } catch (error) {
-      return res.status(401).json({ message: "Not authorized" });
+      return res.status(401).json({ message: "Admin not authorized" });
     }
   } else {
-    return res.status(401).json({ message: "No token" });
+    return res.status(401).json({ message: "No admin token" });
   }
 };
