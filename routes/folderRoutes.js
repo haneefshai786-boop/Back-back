@@ -1,22 +1,10 @@
 import express from "express";
-import {
-  createFolder,
-  updateFolder,
-  deleteFolder,
-  getFolders,
-  getVendorsByFolder
-} from "../controllers/folderController.js";
-import { protectAdmin, protectUser } from "../middleware/authMiddleware.js";
+import { createFolder, getFolders } from "../controllers/folderController.js";
+import { protectAdmin } from "../middleware/adminMiddleware.js";
 
 const router = express.Router();
 
-// Admin CRUD
-router.post("/", protectAdmin, createFolder);
-router.put("/:id", protectAdmin, updateFolder);
-router.delete("/:id", protectAdmin, deleteFolder);
-
-// User fetch
 router.get("/", getFolders);
-router.get("/:folderId/vendors", getVendorsByFolder);
+router.post("/", protectAdmin, createFolder);
 
 export default router;
