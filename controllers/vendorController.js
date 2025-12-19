@@ -1,38 +1,33 @@
 import Vendor from "../models/Vendor.js";
-import Category from "../models/Category.js";
 
-// ✅ Create vendor (ADMIN)
+// Create vendor (admin)
 export const createVendor = async (req, res) => {
-  const vendor = await Vendor.create(req.body);
-  res.status(201).json(vendor);
+  try {
+    const vendor = await Vendor.create(req.body);
+    res.status(201).json(vendor);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
-// ✅ Update vendor (ADMIN)
-export const updateVendor = async (req, res) => {
-  const vendor = await Vendor.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true }
-  );
-  res.json(vendor);
+// Get all vendors
+export const getVendors = async (req, res) => {
+  try {
+    const vendors = await Vendor.find().populate("folder");
+    res.json(vendors);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
-// ✅ Delete vendor (ADMIN)
-export const deleteVendor = async (req, res) => {
-  await Vendor.findByIdAndDelete(req.params.id);
-  res.json({ message: "Vendor deleted" });
-};
-
-// ✅ Get vendors by folder (USER)
+// ✅ REQUIRED – Vendors by folder
 export const getVendorsByFolder = async (req, res) => {
-  const vendors = await Vendor.find({ folder: req.params.folderId });
-  res.json(vendors);
-};
-
-// ✅ Get categories of a vendor (USER)
-export const getCategoriesByVendor = async (req, res) => {
-  const categories = await Category.find({
-    vendor: req.params.vendorId,
-  });
-  res.json(categories);
+  try {
+    const vendors = await Vendor.find({
+      folder: req.params.folderId,
+    });
+    res.json(vendors);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
