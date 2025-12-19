@@ -1,18 +1,22 @@
 import express from "express";
-import { protectAdmin } from "../middleware/authMiddleware.js";
 import {
   createProduct,
-  getProducts,
+  getProductsBySubCategory,
   getProductById,
 } from "../controllers/productController.js";
+import { protectAdmin } from "../middleware/adminMiddleware.js";
 
 const router = express.Router();
 
-// Admin CRUD
+/**
+ * ADMIN
+ */
 router.post("/", protectAdmin, createProduct);
 
-// User fetch
-router.get("/", getProducts);
+/**
+ * USER
+ */
+router.get("/subcategory/:subCategoryId", getProductsBySubCategory);
 router.get("/:id", getProductById);
 
 export default router;
