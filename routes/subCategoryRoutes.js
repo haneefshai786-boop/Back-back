@@ -6,7 +6,8 @@ import {
   getSubCategories,
   getProductsBySubCategory
 } from "../controllers/subCategoryController.js";
-import { protectAdmin } from "../middleware/authMiddleware.js";
+
+import { protectAdmin } from "../middleware/adminMiddleware.js";
 
 const router = express.Router();
 
