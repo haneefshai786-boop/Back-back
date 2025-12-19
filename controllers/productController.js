@@ -1,30 +1,30 @@
 import Product from "../models/Product.js";
 
-/**
- * ADMIN – Create product
- */
+/* ===========================
+   ADMIN: CREATE PRODUCT
+=========================== */
 export const createProduct = async (req, res) => {
   try {
     const {
       name,
       price,
-      image,
-      description,
-      vendor,
       subcategory,
+      vendor,
+      description,
+      image
     } = req.body;
 
-    if (!name || !price || !vendor || !subcategory) {
-      return res.status(400).json({ message: "Missing required fields" });
+    if (!name || !price || !subcategory || !vendor) {
+      return res.status(400).json({ message: "Missing fields" });
     }
 
     const product = await Product.create({
       name,
       price,
-      image,
-      description,
-      vendor,
       subcategory,
+      vendor,
+      description,
+      image
     });
 
     res.status(201).json(product);
@@ -33,14 +33,14 @@ export const createProduct = async (req, res) => {
   }
 };
 
-/**
- * USER – Get products by subcategory
- */
-export const getProductsBySubCategory = async (req, res) => {
+/* ===========================
+   USER: GET ALL PRODUCTS
+=========================== */
+export const getProducts = async (req, res) => {
   try {
-    const products = await Product.find({
-      subcategory: req.params.subCategoryId,
-    }).populate("vendor", "name");
+    const products = await Product.find()
+      .populate("vendor")
+      .populate("subcategory");
 
     res.json(products);
   } catch (err) {
@@ -48,19 +48,18 @@ export const getProductsBySubCategory = async (req, res) => {
   }
 };
 
-/**
- * USER – Get single product
- */
-export const getProductById = async (req, res) => {
+/* ===========================
+   USER: BY SUBCATEGORY
+=========================== */
+export const getProductsBySubCategory = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id)
-      .populate("vendor", "name");
+    const products = await Product.find({
+      subcategory: req.params.id
+    })
+      .populate("vendor")
+      .populate("subcategory");
 
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-
-    res.json(product);
+    res.json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
