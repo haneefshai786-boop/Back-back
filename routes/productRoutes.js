@@ -1,20 +1,18 @@
 import express from "express";
+import { protectAdmin } from "../middleware/authMiddleware.js";
 import {
   createProduct,
-  updateProduct,
-  deleteProduct,
-  getProducts
+  getProducts,
+  getProductById,
 } from "../controllers/productController.js";
-import { protectAdmin } from "../middleware/adminMiddleware.js";
 
 const router = express.Router();
 
 // Admin CRUD
 router.post("/", protectAdmin, createProduct);
-router.put("/:id", protectAdmin, updateProduct);
-router.delete("/:id", protectAdmin, deleteProduct);
 
 // User fetch
 router.get("/", getProducts);
+router.get("/:id", getProductById);
 
 export default router;
