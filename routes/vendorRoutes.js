@@ -1,23 +1,18 @@
 import express from "express";
 import {
   createVendor,
-  updateVendor,
-  deleteVendor,
+  getVendors,
   getVendorsByFolder,
-  getCategoriesByVendor
 } from "../controllers/vendorController.js";
-
 import { protectAdmin } from "../middleware/adminMiddleware.js";
 
 const router = express.Router();
 
-// ADMIN CRUD
+// Admin
 router.post("/", protectAdmin, createVendor);
-router.put("/:id", protectAdmin, updateVendor);
-router.delete("/:id", protectAdmin, deleteVendor);
 
-// USER FLOW
+// User
+router.get("/", getVendors);
 router.get("/folder/:folderId", getVendorsByFolder);
-router.get("/:vendorId/categories", getCategoriesByVendor);
 
 export default router;
